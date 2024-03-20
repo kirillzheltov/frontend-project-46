@@ -1,15 +1,5 @@
-import { cwd } from 'node:process';
-import path from 'node:path';
-import fs from 'node:fs';
 import _ from 'lodash';
-
-function parseFile(filepath) {
-  const filepathResolved = path.resolve(cwd(), filepath);
-  const fileContent = fs.readFileSync(filepathResolved);
-  // const fileExtention = path.extname(filepath).slice(1);
-  const objFromFile = JSON.parse(fileContent);
-  return objFromFile;
-}
+import parseFile from './parseFile.js';
 
 function genDiff(...args) {
   const [obj1, obj2] = args.map((argument) => {
@@ -42,6 +32,7 @@ function genDiff(...args) {
 
   const resultStr = `{\n${iteratedStr}}`;
   console.log(resultStr);
+  return resultStr;
 }
 
 export default genDiff;
