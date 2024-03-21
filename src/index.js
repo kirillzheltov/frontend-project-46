@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import parseFile from './parseFile.js';
+import parseFile from './parsers.js';
 
 function genDiff(...args) {
   const [obj1, obj2] = args.map((argument) => {
