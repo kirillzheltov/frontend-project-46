@@ -9,6 +9,10 @@ function convertToString(entry) {
     return 'false';
   }
 
+  if (typeof entry === 'number') {
+    return entry;
+  }
+
   if (typeof entry === 'object') {
     return '[complex value]';
   }
