@@ -7,7 +7,7 @@ function genDiff(filePath1, filePath2, formatName = 'stylish') {
   const fileContent2 = parseFile(filePath2);
   const rawDiffArray = compare(fileContent1, fileContent2);
   const diffString = formate(rawDiffArray, formatName);
-  // console.log(diffString);
+  console.log(diffString);
   return diffString;
 }
 
