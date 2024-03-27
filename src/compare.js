@@ -1,42 +1,41 @@
 import _ from 'lodash';
+import getType from './utils.js';
 
 function compare(fileContent1, fileContent2, previousPath = null, level = 1) {
   const mergedContent = { ...fileContent1, ...fileContent2 };
-  const sortedContent = _.pick(mergedContent, Object.keys(mergedContent).sort());
-  const comparedContent = [];
+  const comparedContent = Object.keys(mergedContent).flatMap((key) => {
+    const currentPath = previousPath === null ? key : `${previousPath}.${key}`;
 
-  Object.keys(sortedContent).forEach((key) => {
-    const currentsPath = previousPath === null ? key : `${previousPath}.${key}`;
+    const oldValue = fileContent1[key];
+    const newValue = fileContent2[key];
 
-    const entry = {
+    const areObjects = (typeof oldValue === 'object' && typeof newValue === 'object');
+    const nested = areObjects ? compare(oldValue, newValue, currentPath, level + 1) : null;
+
+    const newEntry1 = {
       name: key,
-      path: currentsPath,
+      path: currentPath,
       level,
-      type: 'unknown',
-      oldValue: fileContent1[key] ?? null,
-      newValue: fileContent2[key] ?? null,
-      nested: null,
     };
 
-    if (typeof fileContent1[key] === 'object' && typeof fileContent2[key] === 'object') {
-      entry.nested = compare(fileContent1[key], fileContent2[key], entry.path, level + 1);
-      delete entry.type;
-      delete entry.oldValue;
-      delete entry.newValue;
-    } else if (fileContent1[key] === fileContent2[key]) {
-      entry.type = 'unchanged';
-    } else if (_.isUndefined(fileContent1[key])) {
-      entry.type = 'added';
-    } else if (_.isUndefined(fileContent2[key])) {
-      entry.type = 'deleted';
-    } else {
-      entry.type = 'changed';
+    const newEntry2 = {
+      type: getType(oldValue, newValue),
+      oldValue: oldValue ?? null,
+      newValue: newValue ?? null,
+    };
+
+    const newEntry3 = {
+      nested,
+    };
+
+    if (nested) {
+      return { ...newEntry1, ...newEntry3 };
     }
 
-    comparedContent.push(entry);
+    return { ...newEntry1, ...newEntry2, ...newEntry3 };
   });
 
-  return comparedContent;
+  return _.sortBy(comparedContent, ['name']);
 }
 
 export default compare;
