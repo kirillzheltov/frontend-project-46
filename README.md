@@ -20,3 +20,9 @@ make publish
 
 ## Flat YAML diff
 [![asciicast](https://asciinema.org/a/oFCeJdJP34qOfB4dX0o5mylie.svg)](https://asciinema.org/a/oFCeJdJP34qOfB4dX0o5mylie)
+
+## Nested JSON diff
+[![asciicast](https://asciinema.org/a/p6jI3SKD8bE7SyqZaMqo1IMEy.svg)](https://asciinema.org/a/p6jI3SKD8bE7SyqZaMqo1IMEy)
+
+## Nested YAML diff
+[![asciicast](https://asciinema.org/a/CTbrmCvyfJYm29h4FnNwybUQF.svg)](https://asciinema.org/a/CTbrmCvyfJYm29h4FnNwybUQF)
