@@ -1,13 +1,16 @@
 import _ from 'lodash';
 
-function compare(fileContent1, fileContent2, level = 1) {
+function compare(fileContent1, fileContent2, previousPath = null, level = 1) {
   const mergedContent = { ...fileContent1, ...fileContent2 };
   const sortedContent = _.pick(mergedContent, Object.keys(mergedContent).sort());
   const comparedContent = [];
 
   Object.keys(sortedContent).forEach((key) => {
+    const currentsPath = previousPath === null ? key : `${previousPath}.${key}`;
+
     const entry = {
       name: key,
+      path: currentsPath,
       level,
       type: 'unknown',
       oldValue: fileContent1[key] ?? null,
@@ -16,10 +19,10 @@ function compare(fileContent1, fileContent2, level = 1) {
     };
 
     if (typeof fileContent1[key] === 'object' && typeof fileContent2[key] === 'object') {
-      entry.nested = compare(fileContent1[key], fileContent2[key], level + 1);
+      entry.nested = compare(fileContent1[key], fileContent2[key], entry.path, level + 1);
       delete entry.type;
-      delete entry.old;
-      delete entry.new;
+      delete entry.oldValue;
+      delete entry.newValue;
     } else if (fileContent1[key] === fileContent2[key]) {
       entry.type = 'unchanged';
     } else if (_.isUndefined(fileContent1[key])) {

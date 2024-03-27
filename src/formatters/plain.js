@@ -1,66 +1,42 @@
-const indentSpacerSign = ' ';
-const indentFactor = 4;
-const addedSign = '+';
-const deletedSign = 'was added with value:';
-const unchangedSign = ' ';
-const signToKeySpacerSign = ' ';
-const signAndSpacerLength = (unchangedSign + signToKeySpacerSign).length;
-
-function convertToString(entry, level) {
+function convertToString(entry) {
   if (entry === null) {
     return 'null';
   }
+  if (entry === true) {
+    return 'true';
+  }
+  if (entry === false) {
+    return 'false';
+  }
 
   if (typeof entry === 'object') {
-    const indentPreviousCount = level * indentFactor;
-    const indentPreviousString = indentSpacerSign.repeat(indentPreviousCount);
-    const indentCurrentCount = level * indentFactor + signAndSpacerLength;
-    const indentCurrentString = indentSpacerSign.repeat(indentCurrentCount);
-
-    let string = '{\n';
-    Object.entries(entry).forEach(([key, value]) => {
-      string += `${indentCurrentString}${unchangedSign}${signToKeySpacerSign}`;
-      string += `${key}: ${convertToString(value, level + 1)}\n`;
-    });
-    string += `${indentPreviousString}}`;
-
-    return string;
+    return '[complex value]';
   }
 
-  return entry;
+  return `'${entry}'`;
 }
 
-function stylish(entry) {
+function applyFormat(entry) {
   const {
-    name, level, type, value, nested,
+    path, type, oldValue, newValue, nested,
   } = entry;
 
-  const currentType = Object.prototype.hasOwnProperty.call(entry, 'type') ? type : 'unchanged';
+  let string = '';
 
-  let currentSign;
-  switch (currentType) {
-    case 'deleted':
-      currentSign = deletedSign;
-      break;
-    case 'added':
-      currentSign = addedSign;
-      break;
-    case 'unchanged':
-      currentSign = unchangedSign;
-      break;
-    default:
-      currentSign = unchangedSign;
+  if (type === 'added') {
+    string += `Property '${path}' was added with value: ${convertToString(newValue)}\n`;
+  } else if (type === 'deleted') {
+    string += `Property '${path}' was removed\n`;
+  } else if (type === 'changed') {
+    string += `Property '${path}' was updated. From ${convertToString(oldValue)} to ${convertToString(newValue)}\n`;
   }
 
-  let string = `\n${indentCurrentString}${currentSign}${signToKeySpacerSign}${name}: `;
-
-  if (!Object.prototype.hasOwnProperty.call(entry, 'nested')) {
-    string += `${convertToString(value, level)}`;
-  } else {
-    const stringifiedNested = nested.map((nestedEntry) => stylish(nestedEntry));
-    string += `{${stringifiedNested.join('')}\n${indentPreviousString}}`;
+  if (nested !== null) {
+    const stringifiedNested = nested.map((nestedEntry) => applyFormat(nestedEntry));
+    string += stringifiedNested.join('');
   }
+
   return string;
 }
 
-export default stylish;
+export default applyFormat;

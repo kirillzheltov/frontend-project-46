@@ -30,7 +30,7 @@ function convertToString(entry, level) {
   return entry;
 }
 
-function stylish(entry) {
+function applyFormat(entry) {
   const {
     name,
     level,
@@ -40,35 +40,37 @@ function stylish(entry) {
     nested,
   } = entry;
 
-  const indentCount = level * indentFactor - signAndSpacerLength;
-  const indentString = indentSpacerSign.repeat(indentCount);
+  const indentPreviousCount = level * indentFactor;
+  const indentPreviousString = indentSpacerSign.repeat(indentPreviousCount);
+  const indentCurrentCount = level * indentFactor - signAndSpacerLength;
+  const indentCurrentString = indentSpacerSign.repeat(indentCurrentCount);
 
   let string = '';
 
   switch (type) {
     case 'unchanged':
-      string += `\n${indentString}${unchangedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
+      string += `\n${indentCurrentString}${unchangedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
       break;
     case 'added':
-      string += `\n${indentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
+      string += `\n${indentCurrentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
       break;
     case 'deleted':
-      string += `\n${indentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
+      string += `\n${indentCurrentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
       break;
     case 'changed':
-      string += `\n${indentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
-      string += `\n${indentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
+      string += `\n${indentCurrentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
+      string += `\n${indentCurrentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
       break;
     default:
-      string += `\n${indentString}${unchangedSign}${signToKeySpacerSign}${name}: `;
+      string += `\n${indentCurrentString}${unchangedSign}${signToKeySpacerSign}${name}: `;
   }
 
   if (nested !== null) {
-    const stringifiedNested = nested.map((nestedEntry) => stylish(nestedEntry));
-    string += `{${stringifiedNested.join('')}\n${indentString}  }`;
+    const stringifiedNested = nested.map((nestedEntry) => applyFormat(nestedEntry));
+    string += `{${stringifiedNested.join('')}\n${indentPreviousString}}`;
   }
 
   return string;
 }
 
-export default stylish;
+export default applyFormat;
