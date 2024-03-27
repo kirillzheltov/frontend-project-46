@@ -6,41 +6,31 @@ function compare(fileContent1, fileContent2, level = 1) {
   const comparedContent = [];
 
   Object.keys(sortedContent).forEach((key) => {
-    const key1 = fileContent1[key];
-    const key2 = fileContent2[key];
-
-    const entry1stRow = {
+    const entry = {
       name: key,
       level,
+      type: 'unknown',
+      oldValue: fileContent1[key] ?? null,
+      newValue: fileContent2[key] ?? null,
+      nested: null,
     };
 
-    const entry2ndRow = {
-      name: key,
-      level,
-    };
-
-    if (typeof key1 === 'object' && typeof key2 === 'object') {
-      entry1stRow.nested = compare(key1, key2, level + 1);
-    } else if (key1 === fileContent2[key]) {
-      entry1stRow.type = 'unchanged';
-      entry1stRow.value = key2;
-    } else if (_.isUndefined(key1)) {
-      entry1stRow.type = 'added';
-      entry1stRow.value = key2;
-    } else if (_.isUndefined(key2)) {
-      entry1stRow.type = 'deleted';
-      entry1stRow.value = key1;
+    if (typeof fileContent1[key] === 'object' && typeof fileContent2[key] === 'object') {
+      entry.nested = compare(fileContent1[key], fileContent2[key], level + 1);
+      delete entry.type;
+      delete entry.old;
+      delete entry.new;
+    } else if (fileContent1[key] === fileContent2[key]) {
+      entry.type = 'unchanged';
+    } else if (_.isUndefined(fileContent1[key])) {
+      entry.type = 'added';
+    } else if (_.isUndefined(fileContent2[key])) {
+      entry.type = 'deleted';
     } else {
-      entry1stRow.type = 'deleted';
-      entry1stRow.value = key1;
-      entry2ndRow.type = 'added';
-      entry2ndRow.value = key2;
+      entry.type = 'changed';
     }
 
-    comparedContent.push(entry1stRow);
-    if (Object.prototype.hasOwnProperty.call(entry2ndRow, 'type')) {
-      comparedContent.push(entry2ndRow);
-    }
+    comparedContent.push(entry);
   });
 
   return comparedContent;

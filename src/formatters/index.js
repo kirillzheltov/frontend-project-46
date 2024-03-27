@@ -1,11 +1,11 @@
 import makeStylish from './stylish.js';
 
-function formate(entry, format) {
-  switch (format) {
+function formate(entry, formatName) {
+  switch (formatName) {
     case 'stylish':
       return makeStylish(entry);
     default:
-      throw new Error(`Unknown style: '${format}'. Try 'stylish' instead.`);
+      throw new Error(`Unknown style: '${formatName}'. Try 'stylish' instead.`);
   }
 }
 

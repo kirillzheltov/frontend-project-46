@@ -1,7 +1,7 @@
 const indentSpacerSign = ' ';
 const indentFactor = 4;
 const addedSign = '+';
-const deletedSign = '-';
+const deletedSign = 'was added with value:';
 const unchangedSign = ' ';
 const signToKeySpacerSign = ' ';
 const signAndSpacerLength = (unchangedSign + signToKeySpacerSign).length;
@@ -32,42 +32,34 @@ function convertToString(entry, level) {
 
 function stylish(entry) {
   const {
-    name,
-    level,
-    type,
-    oldValue,
-    newValue,
-    nested,
+    name, level, type, value, nested,
   } = entry;
 
-  const indentCount = level * indentFactor - signAndSpacerLength;
-  const indentString = indentSpacerSign.repeat(indentCount);
+  const currentType = Object.prototype.hasOwnProperty.call(entry, 'type') ? type : 'unchanged';
 
-  let string = '';
-
-  switch (type) {
-    case 'unchanged':
-      string += `\n${indentString}${unchangedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
+  let currentSign;
+  switch (currentType) {
+    case 'deleted':
+      currentSign = deletedSign;
       break;
     case 'added':
-      string += `\n${indentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
+      currentSign = addedSign;
       break;
-    case 'deleted':
-      string += `\n${indentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
-      break;
-    case 'changed':
-      string += `\n${indentString}${deletedSign}${signToKeySpacerSign}${name}: ${convertToString(oldValue, level)}`;
-      string += `\n${indentString}${addedSign}${signToKeySpacerSign}${name}: ${convertToString(newValue, level)}`;
+    case 'unchanged':
+      currentSign = unchangedSign;
       break;
     default:
-      string += `\n${indentString}${unchangedSign}${signToKeySpacerSign}${name}: `;
+      currentSign = unchangedSign;
   }
 
-  if (nested !== null) {
+  let string = `\n${indentCurrentString}${currentSign}${signToKeySpacerSign}${name}: `;
+
+  if (!Object.prototype.hasOwnProperty.call(entry, 'nested')) {
+    string += `${convertToString(value, level)}`;
+  } else {
     const stringifiedNested = nested.map((nestedEntry) => stylish(nestedEntry));
-    string += `{${stringifiedNested.join('')}\n${indentString}  }`;
+    string += `{${stringifiedNested.join('')}\n${indentPreviousString}}`;
   }
-
   return string;
 }
 
