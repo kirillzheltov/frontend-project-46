@@ -32,11 +32,7 @@ function convertToString(entry, level) {
 
 function stylish(entry) {
   const {
-    name,
-    level,
-    type,
-    value,
-    nested,
+    name, level, type, value, nested,
   } = entry;
 
   const indentPreviousCount = level * indentFactor;
