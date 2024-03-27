@@ -10,6 +10,9 @@ function formate(rawDiffArray, formatName) {
     const formattedDiffArray = rawDiffArray.map((entry) => makePlain(entry));
     return formattedDiffArray.join('').trim();
   }
+  if (formatName === 'json') {
+    return JSON.stringify(rawDiffArray[0]);
+  }
   throw new Error(`Unknown style: '${formatName}'. Try 'stylish' instead.`);
 }
 

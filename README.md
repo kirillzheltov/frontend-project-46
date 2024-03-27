@@ -29,3 +29,6 @@ make publish
 
 ## JSON plain diff
 [![asciicast](https://asciinema.org/a/VHDu3S1g5Z84ou7dSPQvp6dqG.svg)](https://asciinema.org/a/VHDu3S1g5Z84ou7dSPQvp6dqG)
+
+## JSON json diff
+[![asciicast](https://asciinema.org/a/qvwnzpC3iu1j4TIWI4R98AthV.svg)](https://asciinema.org/a/qvwnzpC3iu1j4TIWI4R98AthV)

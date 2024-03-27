@@ -39,3 +39,19 @@ test('gets plain diff for yaml', () => {
   const diffParced = fs.readFileSync(diffPath, 'utf-8');
   expect(genDiff(file1Path, file2Path, 'plain')).toBe(diffParced);
 });
+
+test('gets json diff for json', () => {
+  const file1Path = getFixturePath('file1.json');
+  const file2Path = getFixturePath('file2.json');
+  const diffPath = getFixturePath('diffJSON.txt');
+  const diffParced = fs.readFileSync(diffPath, 'utf-8');
+  expect(genDiff(file1Path, file2Path, 'json')).toBe(diffParced);
+});
+
+test('gets json diff for yaml', () => {
+  const file1Path = getFixturePath('file1.yaml');
+  const file2Path = getFixturePath('file2.yml');
+  const diffPath = getFixturePath('diffJSON.txt');
+  const diffParced = fs.readFileSync(diffPath, 'utf-8');
+  expect(genDiff(file1Path, file2Path, 'json')).toBe(diffParced);
+});
