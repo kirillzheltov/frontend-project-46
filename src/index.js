@@ -14,6 +14,8 @@ function genDiff(filePath1, filePath2, formatName = 'stylish') {
   const [fileContent1, fileContent2] = fileContent;
   const rawDiffArray = compare(fileContent1, fileContent2);
   const diffString = formate(rawDiffArray, formatName);
+  console.log(diffString);
+
   return diffString;
 }
 
