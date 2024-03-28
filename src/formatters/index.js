@@ -7,13 +7,14 @@ function formate(rawDiffArray, formatName) {
   }
 
   if (formatName === 'plain') {
-    return rawDiffArray.flatMap((entry) => makePlain(entry)).join('\n');
+    return rawDiffArray.filter((element) => (element.type !== 'unchanged'))
+      .flatMap((entry) => makePlain(entry)).join('\n');
   }
 
   if (formatName === 'json') {
     return JSON.stringify(rawDiffArray[0]);
   }
-  
+
   throw new Error(`Unknown style: '${formatName}'. Try 'stylish' instead.`);
 }
 

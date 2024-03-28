@@ -45,7 +45,7 @@ function applyFormat(entry) {
 
     return stringifiedNested.join('\n');
   }
-
+  console.log(type);
   return '';
 }
 
