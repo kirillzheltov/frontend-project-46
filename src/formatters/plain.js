@@ -27,26 +27,19 @@ function applyFormat(entry) {
     path, type, oldValue, newValue, nested,
   } = entry;
 
-  if (type === 'added') {
-    return `Property '${path}' was added with value: ${stringify(newValue)}`;
+  switch (type) {
+    case 'added':
+      return `Property '${path}' was added with value: ${stringify(newValue)}`;
+    case 'deleted':
+      return `Property '${path}' was removed`;
+    case 'changed':
+      return `Property '${path}' was updated. From ${stringify(oldValue)} to ${stringify(newValue)}`;
+    default:
+      return nested
+        .filter((element) => (element.type !== 'unchanged'))
+        .map((nestedEntry) => applyFormat(nestedEntry))
+        .join('\n');
   }
-
-  if (type === 'deleted') {
-    return `Property '${path}' was removed`;
-  }
-
-  if (type === 'changed') {
-    return `Property '${path}' was updated. From ${stringify(oldValue)} to ${stringify(newValue)}`;
-  }
-
-  if (nested !== null) {
-    const stringifiedNested = nested.filter((element) => (element.type !== 'unchanged'))
-      .map((nestedEntry) => applyFormat(nestedEntry));
-
-    return stringifiedNested.join('\n');
-  }
-  console.log(type);
-  return '';
 }
 
 export default applyFormat;

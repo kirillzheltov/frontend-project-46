@@ -32,17 +32,20 @@ function applyFormat(entry) {
     unchanged: oldValue, added: newValue, deleted: oldValue,
   };
 
-  if (nested !== null) {
-    const stringifiedNested = nested.map((nestedEntry) => applyFormat(nestedEntry));
-    return `${indentCurrent}${signConfig.unchanged} ${name}: {\n${stringifiedNested.join('\n')}\n${indentPrevious}}`;
+  switch (type) {
+    case 'nested': {
+      const stringifiedNested = nested.map((nestedEntry) => applyFormat(nestedEntry));
+      const line1 = `${indentCurrent}${signConfig.unchanged} ${name}: {`;
+      const line2 = `${stringifiedNested.join('\n')}`;
+      return `${line1}\n${line2}\n${indentPrevious}}`;
+    }
+    case 'changed': {
+      const line1 = `${indentCurrent}${signConfig.deleted} ${name}: ${stringify(oldValue, level)}`;
+      const line2 = `${indentCurrent}${signConfig.added} ${name}: ${stringify(newValue, level)}`;
+      return `${line1}\n${line2}`;
+    }
+    default:
+      return `${indentCurrent}${signConfig[type]} ${name}: ${stringify(valueConfig[type], level)}`;
   }
-
-  if (type === 'changed') {
-    const part1 = `${indentCurrent}${signConfig.deleted} ${name}: ${stringify(oldValue, level)}`;
-    const part2 = `${indentCurrent}${signConfig.added} ${name}: ${stringify(newValue, level)}`;
-    return `${part1}\n${part2}`;
-  }
-
-  return `${indentCurrent}${signConfig[type]} ${name}: ${stringify(valueConfig[type], level)}`;
 }
 export default applyFormat;

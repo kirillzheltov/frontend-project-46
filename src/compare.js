@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import getType from './utils.js';
+import { getType } from './utils.js';
 
 function compare(fileContent1, fileContent2, previousPath = null, level = 1) {
   const mergedContent = { ...fileContent1, ...fileContent2 };
@@ -13,9 +13,9 @@ function compare(fileContent1, fileContent2, previousPath = null, level = 1) {
       name: key,
       path: currentPath,
       level,
+      type: getType(oldValue, newValue),
     };
     const newEntry2 = {
-      type: getType(oldValue, newValue),
       oldValue: oldValue ?? null,
       newValue: newValue ?? null,
     };
@@ -23,7 +23,7 @@ function compare(fileContent1, fileContent2, previousPath = null, level = 1) {
       nested,
     };
 
-    if (nested) {
+    if (newEntry1.type === 'nested') {
       return { ...newEntry1, ...newEntry3 };
     }
 

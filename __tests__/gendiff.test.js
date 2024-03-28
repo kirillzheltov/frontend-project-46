@@ -8,7 +8,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const getFixturePath = (fileName) => path.join(__dirname, '..', '__fixtures__', fileName);
 
-test('gets stylish diff for json', () => {
+test('gendiff .json .json', () => {
+  const file1Path = getFixturePath('file1.json');
+  const file2Path = getFixturePath('file2.json');
+  const diffPath = getFixturePath('diffStylish.txt');
+  const diffParced = fs.readFileSync(diffPath, 'utf-8');
+  expect(genDiff(file1Path, file2Path)).toBe(diffParced);
+});
+
+test('gendiff .yaml .yml', () => {
+  const file1Path = getFixturePath('file1.yaml');
+  const file2Path = getFixturePath('file2.yml');
+  const diffPath = getFixturePath('diffStylish.txt');
+  const diffParced = fs.readFileSync(diffPath, 'utf-8');
+  expect(genDiff(file1Path, file2Path)).toBe(diffParced);
+});
+
+test('gendiff --format stylish .json .json', () => {
   const file1Path = getFixturePath('file1.json');
   const file2Path = getFixturePath('file2.json');
   const diffPath = getFixturePath('diffStylish.txt');
@@ -16,7 +32,7 @@ test('gets stylish diff for json', () => {
   expect(genDiff(file1Path, file2Path, 'stylish')).toBe(diffParced);
 });
 
-test('gets stylish diff for yaml', () => {
+test('gendiff --format stylish .yaml .yml', () => {
   const file1Path = getFixturePath('file1.yaml');
   const file2Path = getFixturePath('file2.yml');
   const diffPath = getFixturePath('diffStylish.txt');
@@ -24,7 +40,7 @@ test('gets stylish diff for yaml', () => {
   expect(genDiff(file1Path, file2Path, 'stylish')).toBe(diffParced);
 });
 
-test('gets plain diff for json', () => {
+test('gendiff --format plain .json .json', () => {
   const file1Path = getFixturePath('file1.json');
   const file2Path = getFixturePath('file2.json');
   const diffPath = getFixturePath('diffPlain.txt');
@@ -32,7 +48,7 @@ test('gets plain diff for json', () => {
   expect(genDiff(file1Path, file2Path, 'plain')).toBe(diffParced);
 });
 
-test('gets plain diff for yaml', () => {
+test('gendiff --format plain .yaml .yml', () => {
   const file1Path = getFixturePath('file1.yaml');
   const file2Path = getFixturePath('file2.yml');
   const diffPath = getFixturePath('diffPlain.txt');
@@ -40,7 +56,7 @@ test('gets plain diff for yaml', () => {
   expect(genDiff(file1Path, file2Path, 'plain')).toBe(diffParced);
 });
 
-test('gets json diff for json', () => {
+test('gendiff --format json .json .json', () => {
   const file1Path = getFixturePath('file1.json');
   const file2Path = getFixturePath('file2.json');
   const diffPath = getFixturePath('diffJSON.txt');
@@ -48,7 +64,7 @@ test('gets json diff for json', () => {
   expect(genDiff(file1Path, file2Path, 'json')).toBe(diffParced);
 });
 
-test('gets json diff for yaml', () => {
+test('gendiff --format json .yaml .yml', () => {
   const file1Path = getFixturePath('file1.yaml');
   const file2Path = getFixturePath('file2.yml');
   const diffPath = getFixturePath('diffJSON.txt');

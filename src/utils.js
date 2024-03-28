@@ -1,10 +1,18 @@
+import { cwd } from 'node:process';
+import path from 'node:path';
+import fs from 'node:fs';
 import _ from 'lodash';
 
-function getType(entry1, entry2) {
+export function readFile(filePath) {
+  const filepathResolved = path.resolve(cwd(), filePath);
+  return fs.readFileSync(filepathResolved);
+}
+
+export function getType(entry1, entry2) {
   const areObjects = (typeof entry1 === 'object' && typeof entry2 === 'object');
 
   if (areObjects) {
-    return null;
+    return 'nested';
   }
 
   if (entry1 === entry2) {
@@ -21,5 +29,3 @@ function getType(entry1, entry2) {
 
   return 'changed';
 }
-
-export default getType;
