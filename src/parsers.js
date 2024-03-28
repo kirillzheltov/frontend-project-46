@@ -7,21 +7,16 @@ function parseFile(filePath) {
   const filepathResolved = path.resolve(cwd(), filePath);
   const file = fs.readFileSync(filepathResolved);
   const fileExtention = path.extname(filePath);
-  let fileContent;
 
   switch (fileExtention) {
     case '.json':
-      fileContent = JSON.parse(file);
-      break;
+      return JSON.parse(file);
     case '.yaml':
     case '.yml':
-      fileContent = yaml.load(file);
-      break;
+      return yaml.load(file);
     default:
       throw new Error(`Unknown file extention: '${fileExtention}'!`);
   }
-
-  return fileContent;
 }
 
 export default parseFile;

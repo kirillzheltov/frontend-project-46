@@ -6,12 +6,15 @@ function getType(entry1, entry2) {
   if (areObjects) {
     return null;
   }
+
   if (entry1 === entry2) {
     return 'unchanged';
   }
+
   if (_.isUndefined(entry1)) {
     return 'added';
   }
+
   if (_.isUndefined(entry2)) {
     return 'deleted';
   }

@@ -1,10 +1,12 @@
-function convertToString(entry) {
+function stringify(entry) {
   if (entry === null) {
     return 'null';
   }
+
   if (entry === true) {
     return 'true';
   }
+
   if (entry === false) {
     return 'false';
   }
@@ -25,22 +27,26 @@ function applyFormat(entry) {
     path, type, oldValue, newValue, nested,
   } = entry;
 
-  let string = '';
-
   if (type === 'added') {
-    string += `Property '${path}' was added with value: ${convertToString(newValue)}\n`;
-  } else if (type === 'deleted') {
-    string += `Property '${path}' was removed\n`;
-  } else if (type === 'changed') {
-    string += `Property '${path}' was updated. From ${convertToString(oldValue)} to ${convertToString(newValue)}\n`;
+    return `Property '${path}' was added with value: ${stringify(newValue)}`;
+  }
+
+  if (type === 'deleted') {
+    return `Property '${path}' was removed`;
+  }
+
+  if (type === 'changed') {
+    return `Property '${path}' was updated. From ${stringify(oldValue)} to ${stringify(newValue)}`;
   }
 
   if (nested !== null) {
-    const stringifiedNested = nested.map((nestedEntry) => applyFormat(nestedEntry));
-    string += stringifiedNested.join('');
+    const stringifiedNested = nested.filter((element) => (element.type !== 'unchanged'))
+      .map((nestedEntry) => applyFormat(nestedEntry));
+
+    return stringifiedNested.join('\n');
   }
 
-  return string;
+  return '';
 }
 
 export default applyFormat;
