@@ -42,7 +42,7 @@ function applyFormat(entry) {
     const part2 = `${indentCurrent}${signConfig.added} ${name}: ${stringify(newValue, level)}`;
     return `${part1}\n${part2}`;
   }
-  
+
   return `${indentCurrent}${signConfig[type]} ${name}: ${stringify(valueConfig[type], level)}`;
 }
 export default applyFormat;
